@@ -13,7 +13,7 @@
     "check": "prettier --check",
     "format": "prettier --write",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-docker": "docker-compose up -d",
+    "start-docker": "docker-compose --env-file .env up -d",
     "stop-docker": "docker-compose down",
     "start-server": "npm run start-server --prefix server",
     "start-client": "npm start --prefix client",
