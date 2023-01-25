@@ -1,4 +1,6 @@
 import '../assets/styles/card.scss'
+import { useState } from 'react';
+import ReactCardFlip from 'react-card-flip';
 
 
 /*
@@ -6,42 +8,65 @@ Next steps:
 - review user model, card 'gallery' should be pulled from whatever is currently stored there
 */
 
-const Card = ({subscription, logo, costPerMonth, billingDate, renewalDate, activationDate}) => {
+const Card = ({
+    name,
+    price,
+    frequency,
+    startDate,
+    user,
+    status,
+    endDate,
+    logoUrl,
+    notes,
+  }) => {
+    const [flip, setFlip] = useState(false);
 
   const dummyDB = {
-  subscription: 'Netflix',
-  logo: 'https://klazify.s3.amazonaws.com/151716925161173635260112520c68720.99513922.png',
-  costPerMonth: '$12',
-  billingDate: '1/28/2023',
-  renewalDate: '8/23/2023',
-  activationDate: '8/23/2022'
+    key: 'someId',
+    name: 'Netflix',
+    price: '$12',
+    frequency: 'monthly',
+    startDate: '8/23/2022',
+    user: 'codesmith',
+    status: 'active',
+    endDate: '8/23/2023',
+    logoUrl: 'https://klazify.s3.amazonaws.com/151716925161173635260112520c68720.99513922.png',
+    notes: 'lorem ipsum dolor',
 }
 
   return (
     <div className='card-container'>
-      <div className='image-container'>
-        <img src={dummyDB.logo} alt="" />
-      </div>
-      <div className="card-content">
-        <div className='card-title'>
-          {dummyDB.subscription}
+    <ReactCardFlip isFlipped={flip} flipDirection="horizontal" >
+      <div className='card-content card-front'>
+        <div className='image-container'>
+         <img src={dummyDB.logoUrl} alt="" />
         </div>
         <div className="card-body">
-           <p>Cost per month {dummyDB.costPerMonth}</p>
-          <p>Date of payment: {dummyDB.billingDate}</p>
-          <p>Renewal date: {dummyDB.renewalDate}</p>
-          <p>Activation Date: {dummyDB.activationDate}</p>
-          <p>Manage Account: somewebsite</p>
+          <p>Subscription: {dummyDB.name}</p>
+          <p>Status: {dummyDB.status}</p>
+           <p>Price: {dummyDB.price}</p>
+          <p>Frequency: {dummyDB.frequency}</p>
+          <br />
+          <button onClick={() => setFlip(!flip)}>View More</button>
         </div>
       </div>
 
-      <div className="btn">
-        <button>
-          <a href="">
-            view more
+      <div className="card-content card-back">
+        <div className='image-container'>
+           <img src={dummyDB.logoUrl} alt="" />
+        </div>
+        <div className='card-body'>
+          <p>Username: {dummyDB.user}</p>
+          <p>Start Date: {dummyDB.startDate}</p>
+          <p>End Date: {dummyDB.endDate}</p>
+          <p>Notes: {dummyDB.notes}</p>
+          <a href="https://netflix.com/youraccount/" target="_blank">
+            Manage Account
           </a>
-        </button>
+        </div>
+        <button onClick={() => setFlip(!flip)}>Return</button>
       </div>
+    </ReactCardFlip>
     </div>
   )
 }

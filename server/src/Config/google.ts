@@ -6,7 +6,7 @@ import {
   VerifyCallback,
 } from 'passport-google-oauth20';
 import generator from 'generate-password';
-import BadRequestError from 'src/errors/bad-request.js';
+import BadRequestError from '../errors/bad-request.js';
 
 const randomPw: string = generator.generate({
   length: 10,
