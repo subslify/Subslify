@@ -1,13 +1,20 @@
 {
+  "ts-node": {
+    "transpileOnly": true,
+    "swc": true,
+    "esm": true
+  },
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",
     "target": "ESNext",
     "allowJs": true,
-    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "nodenext",
+    "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
@@ -19,5 +26,5 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["dist", "node_modules", "db-data"]
 }

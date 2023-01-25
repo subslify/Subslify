@@ -9,6 +9,7 @@ interface IsEmailOptions {
   require_tld?: boolean;
 }
 
+
 interface UserSchemaType extends Document {
   name: {
     type: string;
@@ -27,7 +28,31 @@ interface UserSchemaType extends Document {
     unique: boolean;
   };
   password: string;
+  oauth: OauthSchemaType | null;
 }
+
+interface OauthSchemaType {
+  provider: string;
+  userId: string;
+  userEmail: string;
+}
+
+const OauthSchema: Schema<OauthSchemaType> = new Schema({
+  provider: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  userEmail: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+});
 
 const UserSchema: Schema<UserSchemaType> = new Schema({
   name: {
@@ -54,6 +79,7 @@ const UserSchema: Schema<UserSchemaType> = new Schema({
     maxLength: 30,
     select: false,
   },
+  oauth: OauthSchema,
 });
 
 UserSchema.methods.createJWT = function (): string {

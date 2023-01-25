@@ -1,6 +1,9 @@
 {
   "watch": ["src"],
-  "ext": "js,ts",
+  "ext": "js,ts,json",
   "ignore": ["node_modules"],
-  "exec": "node --no-warnings --loader ts-node/esm src/server.ts"
+  "events": {
+    "start": "date"
+  },
+  "exec": "ts-node --esm src/server.ts"
 }

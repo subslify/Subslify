@@ -1,6 +1,9 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import 'express-async-errors';
+import session from 'express-session';
+import passport from 'passport';
+import  passportConfig from './Config/google.js';
 import morgan from 'morgan';
 
 // db and authenticateUser
@@ -17,10 +20,27 @@ import errorHandlerMiddleware from './middleware/error-handler.js';
 // cookieParser
 import cookieParser from 'cookie-parser';
 
+//Load config
 dotenv.config({ path: '../.env' });
+
+//Passport config
+passportConfig(passport);
+// require('./Config/google');
 
 const app: Application = express();
 const port = process.env.PORT || 5002;
+//Sessions
+app.use(
+  session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false, //dont store anything until session happens
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
@@ -39,6 +59,7 @@ app.use('/api/v1/subscriptions', subscriptionsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
 
 const start = async (): Promise<void> => {
   try {
