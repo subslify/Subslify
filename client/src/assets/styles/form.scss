@@ -17,7 +17,17 @@
     }
   }
 }
-
+.Icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .icon {
+    margin: 1em;
+    :hover {
+      box-shadow: 0px 4px 0px 0px hsla(27, 46%, 70%, 0.256);
+    }
+  }
+}
 .form:hover {
   box-shadow: var(--shadow-4);
 }
