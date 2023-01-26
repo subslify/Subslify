@@ -9,7 +9,7 @@ const Search = (props) => {
 
   const { getSubscriptions } = useAppContext();
 
-  const handleSubmit = () => {
+  const handleSubmit = event => {
     event.preventDefault();
     getSubscriptions({type: props.type, sort: null, search: search.value})
   };
@@ -26,8 +26,9 @@ const Search = (props) => {
           value={search.value}
           placeholder='Search...'
           onChange={handleChange}
+          disabled={isLoading}
         />
-        <button type='submit'>
+        <button type='submit' disabled={isLoading}>
           <i className='fa-search'></i>
         </button>
       </form>
