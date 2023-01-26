@@ -1,4 +1,4 @@
-import { Search, Sort } from '../../components';
+import SubscriptionsContainer from '../../components/SubscriptionsContainer';
 import { useAppContext } from '../../context/appContext';
 import '../../assets/styles/search.scss';
 
@@ -6,10 +6,7 @@ const Past = () => {
   return (
     <div>
       <div>Past Subscriptions</div>
-      <div className="search-sort-container">
-        <Search type='past'/>
-        <Sort type='past'/>
-      </div>
+      <SubscriptionsContainer type='past'/>
     </div>
   );
 };

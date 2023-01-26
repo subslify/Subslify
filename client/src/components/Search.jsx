@@ -8,10 +8,11 @@ const Search = (props) => {
   });
 
   const { getSubscriptions } = useAppContext();
+  const { type, setQueryOptions } = props;
 
-  const handleSubmit = () => {
+  const handleSubmit = event => {
     event.preventDefault();
-    getSubscriptions({type: props.type, sort: null, search: search.value})
+    setQueryOptions({type: type, sort: null, search: search.value});
   };
   const handleChange = event => {
     setSearch({value: event.target.value});

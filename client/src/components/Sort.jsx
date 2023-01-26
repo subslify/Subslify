@@ -16,10 +16,10 @@ const Sort = (props) => {
   //Sort dropdown options
   const sortOptions = ['Alphabetical', 'Cost', 'Payment Due'];
 
-  const handleSortOptClick = (e) => {
-    e.preventDefault();
-    getSubscriptions({type: props.type, sort: e.target.innerText.toLowerCase()});
-    setSortStatus({ isOpen: false, activeSortOpt: e.target.innerText });
+  const handleSortOptClick = event => {
+    event.preventDefault();
+    getSubscriptions({type: props.type, sort: event.target.innerText.toLowerCase()});
+    setSortStatus({ isOpen: false, activeSortOpt: event.target.innerText });
   };
 
   //handler that is invoked upon clicking on sort button, toggling its open status to the opposite boolean
