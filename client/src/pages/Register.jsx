@@ -3,6 +3,9 @@ import { Logo, FormRow, Alert } from '../components';
 import { useAppContext } from '../context/appContext';
 import { useNavigate } from 'react-router-dom';
 import '../assets/styles/form.scss';
+import fb from '../assets/images/oauth-logos/fb.svg';
+import google from '../assets/images/oauth-logos/google.svg';
+import gh from '../assets/images/oauth-logos/gh.svg';
 
 const initialState = {
   name: '',
@@ -105,6 +108,17 @@ const Register = () => {
         <button type='button' className='member-btn' onClick={toggleMember}>
           {newUser.isRegistered ? 'Register' : 'Login'}
         </button>
+        <div className='Icons'>
+          <a className='icon' href='#'>
+            <img alt='svg' src={fb}/>
+          </a>
+          <a className='icon' href='http://localhost:8080/api/v1/auth/google'>
+            <img alt='svg' src={google}/>
+          </a>
+          <a className='icon' href='#'>
+            <img alt='svg' src={gh}/>
+          </a>
+        </div>
       </form>
     </section>
   );
