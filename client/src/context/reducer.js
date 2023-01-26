@@ -17,6 +17,11 @@ import {
   GET_SUBSCRIPTIONS_BEGIN,
   GET_SUBSCRIPTIONS_ERROR,
   GET_SUBSCRIPTIONS_SUCCESS,
+  CLEAR_VALUES,
+  HANDLE_CHANGE,
+  CREATE_SUBSCRIPTION_BEGIN,
+  CREATE_SUBSCRIPTION_SUCCESS,
+  CREATE_SUBSCRIPTION_ERROR,
 } from './actions';
 
 import { initialState } from './appContext';
@@ -163,7 +168,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       subscriptions: action.payload.subscriptions,
-    }
+    };
   }
 
   if (action.type === GET_SUBSCRIPTIONS_ERROR) {
@@ -176,8 +181,57 @@ const reducer = (state, action) => {
         message:
           action.payload.message ||
           'Unexpected Error. Subscriptions could not be retrieved.',
-      }
-    }
+      },
+    };
+  }
+
+  if (action.type === HANDLE_CHANGE) {
+    return {
+      ...state,
+      [action.payload.name]: action.payload.value,
+    };
+  }
+
+  if (action.type === CLEAR_VALUES) {
+    const subscriptionState = {
+      isEditing: false,
+      editSubscriptionId: '',
+      subscriptionName: '',
+      subscriptionPrice: '',
+      subscriptionType: 'monthly',
+      subscriptionStatus: 'active',
+    };
+    return {
+      ...state,
+      ...subscriptionState,
+    };
+  }
+
+  if (action.type === CREATE_SUBSCRIPTION_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === CREATE_SUBSCRIPTION_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alert: { type: 'success', message: 'Subscription created successfully!' },
+    };
+  }
+
+  if (action.type === CREATE_SUBSCRIPTION_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alert: {
+        type: 'danger',
+        message:
+          action.payload.message ||
+          'Unexpected Error. Subscription could not be created.',
+      },
+    };
   }
 
   throw new Error(`Unhandled action type: ${action.type}`);

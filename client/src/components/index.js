@@ -6,6 +6,19 @@ import LargeSidebar from './LargeSidebar';
 import SmallSidebar from './SmallSidebar';
 import Search from './Search';
 import Sort from './Sort';
+import FormRowSelect from './FormRowSelect';
+
+export {
+  Logo,
+  FormRow,
+  Alert,
+  Navbar,
+  LargeSidebar,
+  SmallSidebar,
+  Search,
+  Sort,
+  FormRowSelect,
+};
 import Subscription from './Subscription';
 import SubscriptionsContainer from './SubscriptionsContainer';
 
@@ -18,6 +31,4 @@ export {
   SmallSidebar,
   Search,
   Sort,
-  Subscription,
-  SubscriptionsContainer,
 };

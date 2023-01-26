@@ -76,7 +76,7 @@ const Register = () => {
             name='name'
             value={newUser.name}
             placeholder='Enter your name'
-            handleChange={handleChange}
+            onChange={handleChange}
             autocomplete='name'
           />
         )}
@@ -85,7 +85,7 @@ const Register = () => {
           name='email'
           value={newUser.email}
           placeholder='Enter your email'
-          handleChange={handleChange}
+          onChange={handleChange}
           autocomplete='email'
         />
         <FormRow
@@ -93,7 +93,7 @@ const Register = () => {
           name='password'
           value={newUser.password}
           placeholder='Enter your password'
-          handleChange={handleChange}
+          onChange={handleChange}
           autocomplete='current-password'
         />
 
