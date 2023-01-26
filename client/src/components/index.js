@@ -6,5 +6,7 @@ import LargeSidebar from './LargeSidebar';
 import SmallSidebar from './SmallSidebar';
 import Search from './Search';
 import Sort from './Sort';
+import FormRowSelect from './FormRowSelect';
 
-export { Logo, FormRow, Alert, Navbar, LargeSidebar, SmallSidebar, Search, Sort };
+export { Logo, FormRow, Alert, Navbar, LargeSidebar, SmallSidebar, Search, Sort, FormRowSelect };
+
