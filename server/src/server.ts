@@ -5,6 +5,7 @@ import session from 'express-session';
 import passport from 'passport';
 import  passportConfig from './config/google.js';
 import morgan from 'morgan';
+import authenticateUser from './middleware/auth.js';
 
 // db and authenticateUser
 import connectDB from './db/connect.js';
@@ -55,7 +56,7 @@ app.get('/', (_req: Request, res: Response, _next: NextFunction) => {
 
 // Register the authRouter and subscriptionsRouter to their respective endpoints.
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/subscriptions', subscriptionsRouter);
+app.use('/api/v1/subscriptions', authenticateUser, subscriptionsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

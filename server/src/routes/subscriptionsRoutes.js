@@ -10,6 +10,11 @@ import {
 const router = express.Router();
 
 router.route('/').post(createSubscription).get(getSubscriptions);
-router.route('/:id').patch(updateSubscription).delete(deleteSubscription);
+
+router
+  .route('/:id')
+  .get(getOneSubscription)
+  .patch(updateSubscription)
+  .delete(deleteSubscription);
 
 export default router;

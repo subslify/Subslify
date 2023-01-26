@@ -17,6 +17,9 @@ import {
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
   TOGGLE_SIDEBAR,
+  GET_SUBSCRIPTIONS_BEGIN,
+  GET_SUBSCRIPTIONS_SUCCESS,
+  GET_SUBSCRIPTIONS_ERROR,
 } from './actions';
 
 const initialState = {
@@ -36,7 +39,7 @@ const AppProvider = ({ children }) => {
   // Axios config
   // TODO move to separate file
   const authFetch = axios.create({
-    baseURL: '/api/v1/',
+    baseURL: '/api/v1',
   });
 
   // alternative way to add token to header
@@ -196,6 +199,39 @@ const AppProvider = ({ children }) => {
     getCurrentUser();
   }, []);
 
+  //do we want to consider optional parameters at all?
+  const getSubscriptions = async ({ type, sort, search }) => {
+    const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
+
+    try{
+      dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
+      
+      const { data } = await authFetch.get(url);
+      if (!data) {
+        throw new Error('Subscriptions not found');
+      }
+      const { subscriptions } = data;
+      if (!subscriptions) {
+        throw new Error('Subscriptions not found');
+      }
+      
+      dispatch({
+        type: GET_SUBSCRIPTIONS_SUCCESS,
+        payload: { subscriptions }
+      });
+    }
+    catch(error){
+      dispatch( {
+        type: GET_SUBSCRIPTIONS_ERROR,
+        payload: {
+          message:
+            error.response?.data?.message ||  error.message || 'Getting subscriptions failed'
+        }
+      });
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -207,6 +243,7 @@ const AppProvider = ({ children }) => {
         toggleSidebar,
         logoutUser,
         updateUser,
+        getSubscriptions,
       }}
     >
       {children}

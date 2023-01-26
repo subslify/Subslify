@@ -14,6 +14,9 @@ import {
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
   TOGGLE_SIDEBAR,
+  GET_SUBSCRIPTIONS_BEGIN,
+  GET_SUBSCRIPTIONS_ERROR,
+  GET_SUBSCRIPTIONS_SUCCESS,
 } from './actions';
 
 import { initialState } from './appContext';
@@ -149,6 +152,32 @@ const reducer = (state, action) => {
       userLoading: false,
       user: action.payload.user,
     };
+  }
+
+  if (action.type === GET_SUBSCRIPTIONS_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === GET_SUBSCRIPTIONS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      subscriptions: action.payload.subscriptions,
+    }
+  }
+
+  if (action.type === GET_SUBSCRIPTIONS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alert: {
+        type: 'danger',
+        message:
+          action.payload.message ||
+          'Unexpected Error. Subscriptions could not be retrieved.',
+      }
+    }
   }
 
   throw new Error(`Unhandled action type: ${action.type}`);

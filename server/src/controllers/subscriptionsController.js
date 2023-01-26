@@ -23,15 +23,8 @@ const createSubscription = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ message: 'Subscription created' });
 };
 
-const updateSubscription = async (req, res) => {
-  res.send('Update subscription');
-};
-
-const deleteSubscription = async (req, res) => {
-  res.send('Delete subscription');
-};
-
 const getSubscriptions = async (req, res) => {
+ 
   const user = req.user.id;
   const filter = {
     user,
@@ -42,7 +35,23 @@ const getSubscriptions = async (req, res) => {
 };
 
 const getOneSubscription = async (req, res) => {
-  res.send('Get one subscription');
+  Subscription.findById(req.params.id)
+    .then((subscription) => res.status(StatusCodes.OK).json(subscription))
+    .catch((err) => res.status(400).json('Error: ' + err));
+};
+
+const updateSubscription = async (req, res) => {
+  Subscription.findByIdAndUpdate(req.params.id, req.body)
+    .then((subscription) =>
+      res.status(StatusCodes.OK).json('Subscription updated.')
+    )
+    .catch((err) => res.status(400).json('Error: ' + err));
+};
+
+const deleteSubscription = async (req, res) => {
+  Subscription.findByIdAndDelete(req.params.id)
+    .then(() => res.status(StatusCodes.OK).json('Subscription deleted.'))
+    .catch((err) => res.status(400).json('Error: ' + err));
 };
 
 export {
