@@ -6,5 +6,18 @@ import LargeSidebar from './LargeSidebar';
 import SmallSidebar from './SmallSidebar';
 import Search from './Search';
 import Sort from './Sort';
+import Subscription from './Subscription';
+import SubscriptionsContainer from './SubscriptionsContainer';
 
-export { Logo, FormRow, Alert, Navbar, LargeSidebar, SmallSidebar, Search, Sort };
+export {
+  Logo,
+  FormRow,
+  Alert,
+  Navbar,
+  LargeSidebar,
+  SmallSidebar,
+  Search,
+  Sort,
+  Subscription,
+  SubscriptionsContainer,
+};

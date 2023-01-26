@@ -29,6 +29,7 @@ const initialState = {
   alert: { type: '', message: '' },
   user: null,
   showSidebar: true,
+  subscriptions: [],
 };
 
 const AppContext = createContext();
@@ -200,33 +201,35 @@ const AppProvider = ({ children }) => {
   }, []);
 
   //do we want to consider optional parameters at all?
-  const getSubscriptions = async ({ type, sort, search }) => {
+  const getSubscriptions = async ({ type = '', sort = '', search = '' }) => {
     const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
 
-    try{
+    try {
       dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
-      
+
       const { data } = await authFetch.get(url);
       if (!data) {
-        throw new Error('Subscriptions not found');
+        throw new Error('Failed to fetch data from the server');
       }
       const { subscriptions } = data;
       if (!subscriptions) {
-        throw new Error('Subscriptions not found');
+        throw new Error('Could not get subscriptions');
       }
-      
+
       dispatch({
         type: GET_SUBSCRIPTIONS_SUCCESS,
-        payload: { subscriptions }
+        payload: { subscriptions },
       });
-    }
-    catch(error){
-      dispatch( {
+    } catch (error) {
+      if (error.response?.status === 401) return;
+      dispatch({
         type: GET_SUBSCRIPTIONS_ERROR,
         payload: {
           message:
-            error.response?.data?.message ||  error.message || 'Getting subscriptions failed'
-        }
+            error.response?.data?.message ||
+            error.message ||
+            'Getting subscriptions failed',
+        },
       });
     }
     clearAlert();
