@@ -164,10 +164,14 @@ const reducer = (state, action) => {
   }
 
   if (action.type === GET_SUBSCRIPTIONS_SUCCESS) {
+
+    const type = action.payload.type;
+    const key = `subscriptions.${type}`;
+
     return {
       ...state,
       isLoading: false,
-      subscriptions: action.payload.subscriptions,
+      [key]: action.payload.subscriptions,
     };
   }
 

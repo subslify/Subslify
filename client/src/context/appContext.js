@@ -34,7 +34,7 @@ const initialState = {
   alert: { type: '', message: '' },
   user: null,
   showSidebar: true,
-  subscriptions: [],
+  subscriptions: {},
   /* Create Subscription */
   isEditing: false,
   editSubscriptionId: '',
@@ -268,7 +268,7 @@ const AppProvider = ({ children }) => {
 
       dispatch({
         type: GET_SUBSCRIPTIONS_SUCCESS,
-        payload: { subscriptions },
+        payload: { subscriptions, type },
       });
     } catch (error) {
       dispatch({
