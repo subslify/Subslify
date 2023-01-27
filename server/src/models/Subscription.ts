@@ -66,7 +66,7 @@ const SubscriptionSchema: Schema<SubscriptionSchemaType> = new Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'cancelled', 'paused', 'trial'],
+    enum: ['active', 'cancelled', 'trial'], //removed 'paused'
     default: 'active',
   },
   startDate: {
