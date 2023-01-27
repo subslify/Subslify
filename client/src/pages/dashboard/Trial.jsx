@@ -1,11 +1,10 @@
-import { Search, Sort, SubscriptionsContainer } from '../../components';
-import '../../assets/styles/search.scss';
+import { SubscriptionsContainer } from '../../components';
 
 const Trial = () => {
   return (
     <>
       <div>Trial Subscriptions</div>
-      <SubscriptionsContainer type='active' />
+      <SubscriptionsContainer />
     </>
   );
 };

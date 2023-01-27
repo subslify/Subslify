@@ -43,9 +43,8 @@ const initialState = {
   // TODO setup constants file
   subscriptionTypeOptions: ['weekly', 'monthly', 'quarterly', 'yearly'],
   subscriptionType: 'monthly',
+  subscriptionStartDate: new Date(),
   subscriptionStatusOptions: ['active', 'inactive', 'canceled', 'trial'],
-  // Should be set to 'active' by default
-  // Should be cancelled using "proper" aka British English
   subscriptionStatus: 'active',
 };
 
@@ -227,8 +226,9 @@ const AppProvider = ({ children }) => {
       const newSubscription = {
         name: state.subscriptionName,
         price: state.subscriptionPrice,
-        type: state.subscriptionType,
+        frequency: state.subscriptionType,
         status: state.subscriptionStatus,
+        startDate: state.subscriptionStartDate,
       };
       await authFetch.post('/subscriptions', newSubscription);
       dispatch({ type: CREATE_SUBSCRIPTION_SUCCESS });
@@ -255,7 +255,7 @@ const AppProvider = ({ children }) => {
     try {
       dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
 
-      const { data } = await authFetch.get(url);
+      const { data } = await authFetch.get('/subscriptions');
       if (!data) {
         throw new Error('Failed to fetch data from the server');
       }
@@ -263,6 +263,8 @@ const AppProvider = ({ children }) => {
       if (!subscriptions) {
         throw new Error('Could not get subscriptions');
       }
+
+      console.log({ subscriptions });
 
       dispatch({
         type: GET_SUBSCRIPTIONS_SUCCESS,
@@ -280,6 +282,21 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
+  };
+
+  const getSubscriptions2 = async (type, params) => {
+    dispatch({ type: GET_ALL_SUBSCRIPTIONS_BEGIN });
+    try {
+      const { data } = await authFetch.get('/subscriptions');
+      const { subscriptions } = data;
+      dispatch({
+        type: GET_ALL_SUBSCRIPTIONS_SUCCESS,
+        payload: { subscriptions },
+      });
+    } catch (error) {
+      if (error.response?.status === 401) return;
+      console.log(error.response?.data?.message || error.message);
+    }
   };
 
   useEffect(() => {

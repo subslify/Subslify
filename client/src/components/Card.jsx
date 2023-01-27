@@ -1,7 +1,6 @@
-import '../assets/styles/card.scss'
+import '../assets/styles/card.scss';
 import { useState } from 'react';
 import ReactCardFlip from 'react-card-flip';
-
 
 /*
 Next steps:
@@ -9,17 +8,17 @@ Next steps:
 */
 
 const Card = ({
-    name,
-    price,
-    frequency,
-    startDate,
-    user,
-    status,
-    endDate,
-    logoUrl,
-    notes,
-  }) => {
-    const [flip, setFlip] = useState(false);
+  name,
+  price,
+  frequency,
+  startDate,
+  user,
+  status,
+  endDate,
+  logoUrl,
+  notes,
+}) => {
+  const [flip, setFlip] = useState(false);
 
   const dummyDB = {
     key: 'someId',
@@ -30,45 +29,47 @@ const Card = ({
     user: 'codesmith',
     status: 'active',
     endDate: '8/23/2023',
-    logoUrl: 'https://klazify.s3.amazonaws.com/151716925161173635260112520c68720.99513922.png',
+    logoUrl:
+      'https://klazify.s3.amazonaws.com/151716925161173635260112520c68720.99513922.png',
     notes: 'lorem ipsum dolor',
-}
+  };
 
   return (
     <div className='card-container'>
-    <ReactCardFlip isFlipped={flip} flipDirection="horizontal" >
-      <div className='card-content card-front'>
-        <div className='image-container'>
-         <img src={dummyDB.logoUrl} alt="" />
+      <ReactCardFlip isFlipped={flip} flipDirection='horizontal'>
+        <div className='card-content card-front'>
+          <div className='image-container'>
+            <img src={dummyDB.logoUrl} alt='' />
+          </div>
+          <div className='card-body'>
+            <p>Subscription: {name}</p>
+            <p>Status: {status}</p>
+            <p>Price: {price}</p>
+            <p>Frequency: {frequency}</p>
+            <p>Start Date: {startDate}</p>
+            <br />
+            <button onClick={() => setFlip(!flip)}>View More</button>
+          </div>
         </div>
-        <div className="card-body">
-          <p>Subscription: {dummyDB.name}</p>
-          <p>Status: {dummyDB.status}</p>
-           <p>Price: {dummyDB.price}</p>
-          <p>Frequency: {dummyDB.frequency}</p>
-          <br />
-          <button onClick={() => setFlip(!flip)}>View More</button>
-        </div>
-      </div>
 
-      <div className="card-content card-back">
-        <div className='image-container'>
-           <img src={dummyDB.logoUrl} alt="" />
+        <div className='card-content card-back'>
+          <div className='image-container'>
+            <img src={dummyDB.logoUrl} alt='' />
+          </div>
+          <div className='card-body'>
+            <p>Username: {dummyDB.user}</p>
+
+            <p>End Date: {dummyDB.endDate}</p>
+            <p>Notes: {dummyDB.notes}</p>
+            <a href='https://netflix.com/youraccount/' target='_blank'>
+              Manage Account
+            </a>
+          </div>
+          <button onClick={() => setFlip(!flip)}>Return</button>
         </div>
-        <div className='card-body'>
-          <p>Username: {dummyDB.user}</p>
-          <p>Start Date: {dummyDB.startDate}</p>
-          <p>End Date: {dummyDB.endDate}</p>
-          <p>Notes: {dummyDB.notes}</p>
-          <a href="https://netflix.com/youraccount/" target="_blank">
-            Manage Account
-          </a>
-        </div>
-        <button onClick={() => setFlip(!flip)}>Return</button>
-      </div>
-    </ReactCardFlip>
+      </ReactCardFlip>
     </div>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;
