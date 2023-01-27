@@ -25,6 +25,8 @@ const createSubscription = async (req, res) => {
 
 const getSubscriptions = async (req, res) => {
   const user = req.user.id;
+
+  
   if (!user) {
     throw new UnAuthenticatedError('User not found');
   }
@@ -42,7 +44,7 @@ const getSubscriptions = async (req, res) => {
     filter.name = { $regex: search, $options: 'i' };
   }
   
-  //filter, sort 
+  //sort 
   const result = Subscription.find(filter);
   // if user sort by 'cost', or 'alpha'
   if (sort === "cost") {
