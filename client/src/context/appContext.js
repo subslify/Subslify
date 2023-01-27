@@ -34,7 +34,11 @@ const initialState = {
   alert: { type: '', message: '' },
   user: null,
   showSidebar: true,
-  subscriptions: [],
+  subscriptions: {
+    active:[],
+    trial:[],
+    past:[]
+  },
   /* Create Subscription */
   isEditing: false,
   editSubscriptionId: '',
@@ -44,7 +48,7 @@ const initialState = {
   subscriptionTypeOptions: ['weekly', 'monthly', 'quarterly', 'yearly'],
   subscriptionType: 'monthly',
   subscriptionStartDate: new Date(),
-  subscriptionStatusOptions: ['active', 'inactive', 'canceled', 'trial'],
+  subscriptionStatusOptions: ['active', 'inactive', 'cancelled', 'trial'],
   subscriptionStatus: 'active',
 };
 
@@ -249,13 +253,13 @@ const AppProvider = ({ children }) => {
   };
 
   //do we want to consider optional parameters at all?
-  const getSubscriptions = async ({ type = '', sort = '', search = '' }) => {
+  const getSubscriptions = async ({ type, sort, search}) => {
     const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
 
     try {
       dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
 
-      const { data } = await authFetch.get('/subscriptions');
+      const { data } = await authFetch.get(url);
       if (!data) {
         throw new Error('Failed to fetch data from the server');
       }
@@ -263,12 +267,10 @@ const AppProvider = ({ children }) => {
       if (!subscriptions) {
         throw new Error('Could not get subscriptions');
       }
-
-      console.log({ subscriptions });
-
+      
       dispatch({
         type: GET_SUBSCRIPTIONS_SUCCESS,
-        payload: { subscriptions },
+        payload: { subscriptions, type },
       });
     } catch (error) {
       dispatch({
@@ -282,21 +284,6 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
-  };
-
-  const getSubscriptions2 = async (type, params) => {
-    dispatch({ type: GET_ALL_SUBSCRIPTIONS_BEGIN });
-    try {
-      const { data } = await authFetch.get('/subscriptions');
-      const { subscriptions } = data;
-      dispatch({
-        type: GET_ALL_SUBSCRIPTIONS_SUCCESS,
-        payload: { subscriptions },
-      });
-    } catch (error) {
-      if (error.response?.status === 401) return;
-      console.log(error.response?.data?.message || error.message);
-    }
   };
 
   useEffect(() => {
