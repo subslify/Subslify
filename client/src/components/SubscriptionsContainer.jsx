@@ -1,29 +1,34 @@
-import { useState, useEffect } from 'react';
-import SearchSortContainer from './SearchSortContainer';
-import CardsContainer from './CardsContainer';
 import { useAppContext } from '../context/appContext';
+import { useEffect } from 'react';
+import Loading from './Loading';
+import Card from './Card';
+import SearchSortContainer from './SearchSortContainer';
 
-const SubscriptionsContainer = (props) => {
-  const { type } = props;
-  const [queryOptions, setQueryOptions] = useState({type:type});
-
-  const { getSubscriptions } = useAppContext();
+const SubscriptionsContainer = () => {
+  const { getSubscriptions, subscriptions, isLoading } = useAppContext();
 
   useEffect(() => {
-    getSubscriptions(queryOptions);
-  }, [queryOptions]);
+    getSubscriptions({});
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
-    <div className='subscriptions-container'>
-      {/* This needs to be made more efficient, no need to destructure and pass down this many times */}
+    <section className='subscriptions-container'>
       <SearchSortContainer
         type={type}
         queryOptions={queryOptions}
         setQueryOptions={setQueryOptions}
       />
       <CardsContainer />
-    </div>
+      <div className='subscriptions'>
+        {subscriptions.map((subscription) => {
+          return <Card key={subscription._id} {...subscription} />;
+        })}
+      </div>
+    </section>
   );
 };
-
 export default SubscriptionsContainer;

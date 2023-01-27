@@ -16,17 +16,20 @@ const Sort = (props) => {
   //Sort dropdown options
   const sortOptions = ['Alphabetical', 'Cost', 'Payment Due'];
 
-  const handleSortOptClick = event => {
-    event.preventDefault();
-    getSubscriptions({type: props.type, sort: event.target.innerText.toLowerCase()});
-    setSortStatus({ isOpen: false, activeSortOpt: event.target.innerText });
+  const handleSortOptClick = (e) => {
+    e.preventDefault();
+    getSubscriptions({
+      type: props.type,
+      sort: e.target.innerText.toLowerCase(),
+    });
+    setSortStatus({ isOpen: false, activeSortOpt: e.target.innerText });
   };
 
   //handler that is invoked upon clicking on sort button, toggling its open status to the opposite boolean
   const handleSortClick = () => {
     //invoke funtion in appContext here
-        //dispatch action?
-    setSortStatus((sortStatus) => {
+    //dispatch action?
+    setOptions((sortStatus) => {
       return {
         ...sortStatus,
         isOpen: !sortStatus.isOpen,
@@ -35,10 +38,11 @@ const Sort = (props) => {
   };
 
   //Map dropdown options to li component
-  const sortListItems = sortOptions.map(el => {
+  const sortListItems = sortOptions.map((el) => {
     //If the list item was selected, provide dynamic className for dynamic styling
     //Will let user know which sort option is currently active
-    let activeClass = activeSortOpt === el ? 'active sort-list-item' : 'sort-list-item';
+    let activeClass =
+      activeSortOpt === el ? 'active sort-list-item' : 'sort-list-item';
 
     return (
       <li
@@ -51,7 +55,7 @@ const Sort = (props) => {
       </li>
     );
   });
-  
+
   return (
     <div className='sort-container'>
       <button type='button' className='sort-button' onClick={handleSortClick}>

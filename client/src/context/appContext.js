@@ -20,6 +20,11 @@ import {
   GET_SUBSCRIPTIONS_BEGIN,
   GET_SUBSCRIPTIONS_SUCCESS,
   GET_SUBSCRIPTIONS_ERROR,
+  CLEAR_VALUES,
+  HANDLE_CHANGE,
+  CREATE_SUBSCRIPTION_BEGIN,
+  CREATE_SUBSCRIPTION_SUCCESS,
+  CREATE_SUBSCRIPTION_ERROR,
 } from './actions';
 
 const initialState = {
@@ -29,6 +34,18 @@ const initialState = {
   alert: { type: '', message: '' },
   user: null,
   showSidebar: true,
+  subscriptions: [],
+  /* Create Subscription */
+  isEditing: false,
+  editSubscriptionId: '',
+  subscriptionName: '',
+  subscriptionPrice: 0,
+  // TODO setup constants file
+  subscriptionTypeOptions: ['weekly', 'monthly', 'quarterly', 'yearly'],
+  subscriptionType: 'monthly',
+  subscriptionStartDate: new Date(),
+  subscriptionStatusOptions: ['active', 'inactive', 'canceled', 'trial'],
+  subscriptionStatus: 'active',
 };
 
 const AppContext = createContext();
@@ -81,7 +98,7 @@ const AppProvider = ({ children }) => {
   const clearAlert = () => {
     setTimeout(() => {
       dispatch({ type: REMOVE_ALERT });
-    }, 1500);
+    }, 5000);
   };
 
   const registerUser = async (newUser) => {
@@ -195,42 +212,96 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
+  const handleChange = ({ name, value }) => {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+  };
 
-  //do we want to consider optional parameters at all?
-  const getSubscriptions = async ({ type, sort, search }) => {
-    const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES });
+  };
 
-    try{
-      dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
-      
-      const { data } = await authFetch.get(url);
-      if (!data) {
-        throw new Error('Subscriptions not found');
-      }
-      const { subscriptions } = data;
-      if (!subscriptions) {
-        throw new Error('Subscriptions not found');
-      }
-      
+  const createSubscription = async () => {
+    dispatch({ type: CREATE_SUBSCRIPTION_BEGIN });
+    try {
+      const newSubscription = {
+        name: state.subscriptionName,
+        price: state.subscriptionPrice,
+        frequency: state.subscriptionType,
+        status: state.subscriptionStatus,
+        startDate: state.subscriptionStartDate,
+      };
+      await authFetch.post('/subscriptions', newSubscription);
+      dispatch({ type: CREATE_SUBSCRIPTION_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response?.status === 401) return;
       dispatch({
-        type: GET_SUBSCRIPTIONS_SUCCESS,
-        payload: { subscriptions }
-      });
-    }
-    catch(error){
-      dispatch( {
-        type: GET_SUBSCRIPTIONS_ERROR,
+        type: CREATE_SUBSCRIPTION_ERROR,
         payload: {
           message:
-            error.response?.data?.message ||  error.message || 'Getting subscriptions failed'
-        }
+            error.response?.data?.message ||
+            error.message ||
+            'Creating subscription failed',
+        },
       });
     }
     clearAlert();
   };
+
+  //do we want to consider optional parameters at all?
+  const getSubscriptions = async ({ type = '', sort = '', search = '' }) => {
+    const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
+
+    try {
+      dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
+
+      const { data } = await authFetch.get('/subscriptions');
+      if (!data) {
+        throw new Error('Failed to fetch data from the server');
+      }
+      const { subscriptions } = data;
+      if (!subscriptions) {
+        throw new Error('Could not get subscriptions');
+      }
+
+      console.log({ subscriptions });
+
+      dispatch({
+        type: GET_SUBSCRIPTIONS_SUCCESS,
+        payload: { subscriptions },
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SUBSCRIPTIONS_ERROR,
+        payload: {
+          message:
+            error.response?.data?.message ||
+            error.message ||
+            'Getting subscriptions failed',
+        },
+      });
+    }
+    clearAlert();
+  };
+
+  const getSubscriptions2 = async (type, params) => {
+    dispatch({ type: GET_ALL_SUBSCRIPTIONS_BEGIN });
+    try {
+      const { data } = await authFetch.get('/subscriptions');
+      const { subscriptions } = data;
+      dispatch({
+        type: GET_ALL_SUBSCRIPTIONS_SUCCESS,
+        payload: { subscriptions },
+      });
+    } catch (error) {
+      if (error.response?.status === 401) return;
+      console.log(error.response?.data?.message || error.message);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <AppContext.Provider
@@ -244,6 +315,9 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         getSubscriptions,
+        clearValues,
+        handleChange,
+        createSubscription,
       }}
     >
       {children}
