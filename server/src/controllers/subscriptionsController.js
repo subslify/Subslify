@@ -46,16 +46,16 @@ const getSubscriptions = async (req, res) => {
   
   //sort 
   const result = Subscription.find(filter);
-  // if user sort by 'cost', or 'alpha'
+
+  // if user sort by 'cost', or 'alpha', using mongoSort method
   if (sort === "cost") {
-    result.sort((a,b)=>  a-b);
+    result.sort('price');
   } else if (sort === "alphabetical") {
-    result.sort((a,b)=>  a-b);
+    result.sort('name');
+  } else if(sort === 'payment due'){
+    result.sort('startDate')
   }
 
-  
-  //sort price, maybe date();
-  
   const subscriptions = await result;
   console.log(subscriptions);
 
