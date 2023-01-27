@@ -5,10 +5,6 @@
   justify-content: start;
 }
 
-.search-container {
-    
-}
-
 .search-input {
   display: block;
   width: 400px;
@@ -36,7 +32,14 @@
   font-weight: bolder;
 }
 
+.sort-container {
+  :hover{
+    cursor: pointer;
+  }
+}
+
 .sort-list {
+  position: absolute;
   padding: 5px;
   padding-right: 30px;
   background-color: white;

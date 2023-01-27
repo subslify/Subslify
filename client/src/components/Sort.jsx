@@ -18,10 +18,7 @@ const Sort = (props) => {
 
   const handleSortOptClick = (e) => {
     e.preventDefault();
-    getSubscriptions({
-      type: props.type,
-      sort: e.target.innerText.toLowerCase(),
-    });
+    getSubscriptions({type: props.type, sort: e.target.innerText.toLowerCase()});
     setSortStatus({ isOpen: false, activeSortOpt: e.target.innerText });
   };
 
@@ -29,6 +26,12 @@ const Sort = (props) => {
   const handleSortClick = () => {
     //invoke funtion in appContext here
     //dispatch action?
+    // setOptions((sortStatus) => {
+    //   return {
+    //     ...sortStatus,
+    //     isOpen: !sortStatus.isOpen,
+    //   };
+    // });
     setSortStatus((sortStatus) => {
       return {
         ...sortStatus,
