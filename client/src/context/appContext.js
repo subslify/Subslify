@@ -48,7 +48,7 @@ const initialState = {
   subscriptionTypeOptions: ['weekly', 'monthly', 'quarterly', 'yearly'],
   subscriptionType: 'monthly',
   subscriptionStartDate: new Date(),
-  subscriptionStatusOptions: ['active', 'inactive', 'canceled', 'trial'],
+  subscriptionStatusOptions: ['active', 'inactive', 'cancelled', 'trial'],
   subscriptionStatus: 'active',
 };
 
@@ -253,13 +253,13 @@ const AppProvider = ({ children }) => {
   };
 
   //do we want to consider optional parameters at all?
-  const getSubscriptions = async ({ type = '', sort = '', search = '' }) => {
+  const getSubscriptions = async ({ type, sort, search}) => {
     const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
 
     try {
       dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
 
-      const { data } = await authFetch.get('/subscriptions');
+      const { data } = await authFetch.get(url);
       if (!data) {
         throw new Error('Failed to fetch data from the server');
       }

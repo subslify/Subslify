@@ -6,7 +6,7 @@ const Past = () => {
   return (
     <div>
       <div>Past Subscriptions</div>
-      <SubscriptionsContainer type='past'/>
+      <SubscriptionsContainer type='cancelled'/>
     </div>
   );
 };

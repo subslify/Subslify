@@ -167,7 +167,6 @@ const reducer = (state, action) => {
     
     const type = action.payload.type;
     const key = `subscriptions.${type}`;
-    console.log('reducer', [type, key, action.payload.subscriptions])
 
     return {
       ...state,
