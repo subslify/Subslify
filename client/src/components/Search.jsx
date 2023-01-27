@@ -10,7 +10,7 @@ const Search = (props) => {
   const { getSubscriptions } = useAppContext();
 
   const handleSubmit = () => {
-    event.preventDefault();
+    e.preventDefault();
     getSubscriptions({type: props.type, sort: null, search: search.value})
   };
   const handleChange = event => {

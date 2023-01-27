@@ -29,7 +29,7 @@ const Sort = (props) => {
   const handleSortClick = () => {
     //invoke funtion in appContext here
     //dispatch action?
-    setOptions((sortStatus) => {
+    setSortStatus((sortStatus) => {
       return {
         ...sortStatus,
         isOpen: !sortStatus.isOpen,
@@ -41,8 +41,7 @@ const Sort = (props) => {
   const sortListItems = sortOptions.map((el) => {
     //If the list item was selected, provide dynamic className for dynamic styling
     //Will let user know which sort option is currently active
-    let activeClass =
-      activeSortOpt === el ? 'active sort-list-item' : 'sort-list-item';
+    let activeClass = activeSortOpt === el ? 'active sort-list-item' : 'sort-list-item';
 
     return (
       <li

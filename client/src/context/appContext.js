@@ -169,7 +169,8 @@ const AppProvider = ({ children }) => {
 
       dispatch({ type: UPDATE_USER_SUCCESS, payload: { user } });
     } catch (error) {
-      if (error.response?.status !== 401) {
+      if (error.response?.status === 401) return;
+      
         dispatch({
           type: UPDATE_USER_ERROR,
           payload: {
@@ -178,7 +179,7 @@ const AppProvider = ({ children }) => {
           },
         });
       }
-    }
+    
     clearAlert();
   };
 
@@ -255,7 +256,7 @@ const AppProvider = ({ children }) => {
     try {
       dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
 
-      const { data } = await authFetch.get('/subscriptions');
+      const { data } = await authFetch.get(url);
       if (!data) {
         throw new Error('Failed to fetch data from the server');
       }
@@ -282,21 +283,6 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
-  };
-
-  const getSubscriptions2 = async (type, params) => {
-    dispatch({ type: GET_ALL_SUBSCRIPTIONS_BEGIN });
-    try {
-      const { data } = await authFetch.get('/subscriptions');
-      const { subscriptions } = data;
-      dispatch({
-        type: GET_ALL_SUBSCRIPTIONS_SUCCESS,
-        payload: { subscriptions },
-      });
-    } catch (error) {
-      if (error.response?.status === 401) return;
-      console.log(error.response?.data?.message || error.message);
-    }
   };
 
   useEffect(() => {

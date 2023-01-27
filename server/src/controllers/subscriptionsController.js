@@ -25,11 +25,40 @@ const createSubscription = async (req, res) => {
 
 const getSubscriptions = async (req, res) => {
   const user = req.user.id;
-  const filter = {
-    user,
-    ...req.query, // TODO: sanitize query
-  };
-  const subscriptions = await Subscription.find(filter).exec();
+  if (!user) {
+    throw new UnAuthenticatedError('User not found');
+  }
+
+  
+  const { status, frequency, sort, search } = req.query;
+  
+  const filter = { user };
+  
+  
+  filter.status = status ? status : 'active';
+  filter.frequency = frequency ? frequency : 'monthly';
+  
+  if (search) {
+    filter.name = { $regex: search, $options: 'i' };
+  }
+  
+  //filter, sort 
+  const result = Subscription.find(filter);
+  // if user sort by 'cost', or 'alpha'
+  if (sort === "cost") {
+    result.sort((a,b)=>  a-b);
+  } else if (sort === "alphabetical") {
+    result.sort((a,b)=>  a-b);
+  }
+
+  
+  //sort price, maybe date();
+  
+  const subscriptions = await result;
+  console.log(subscriptions);
+
+
+  // add Subscription.find().sort({obj})?
   res.status(StatusCodes.OK).json({ subscriptions });
 };
 

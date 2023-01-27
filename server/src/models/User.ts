@@ -45,12 +45,10 @@ const OauthSchema: Schema<OauthSchemaType> = new Schema({
   userId: {
     type: String,
     required: true,
-    unique: true,
   },
   userEmail: {
     type: String,
     required: true,
-    unique: true,
   },
 });
 
