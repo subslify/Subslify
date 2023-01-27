@@ -254,7 +254,7 @@ const AppProvider = ({ children }) => {
   };
 
   //do we want to consider optional parameters at all?
-  const getSubscriptions = async ({ type, sort, search}) => {
+  const getSubscriptions = async ({ type = '', sort = '', search = ''}) => {
     const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
 
     try {
