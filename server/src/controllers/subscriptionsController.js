@@ -24,14 +24,13 @@ const createSubscription = async (req, res) => {
 };
 
 const getSubscriptions = async (req, res) => {
- 
   const user = req.user.id;
   const filter = {
     user,
     ...req.query, // TODO: sanitize query
   };
   const subscriptions = await Subscription.find(filter).exec();
-  res.status(StatusCodes.OK).json(subscriptions);
+  res.status(StatusCodes.OK).json({ subscriptions });
 };
 
 const getOneSubscription = async (req, res) => {
