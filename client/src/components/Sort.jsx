@@ -18,10 +18,7 @@ const Sort = (props) => {
 
   const handleSortOptClick = (e) => {
     e.preventDefault();
-    getSubscriptions({
-      type: props.type,
-      sort: e.target.innerText.toLowerCase(),
-    });
+    getSubscriptions({type: props.type, sort: e.target.innerText.toLowerCase()});
     setSortStatus({ isOpen: false, activeSortOpt: e.target.innerText });
   };
 
@@ -29,7 +26,13 @@ const Sort = (props) => {
   const handleSortClick = () => {
     //invoke funtion in appContext here
     //dispatch action?
-    setOptions((sortStatus) => {
+    // setOptions((sortStatus) => {
+    //   return {
+    //     ...sortStatus,
+    //     isOpen: !sortStatus.isOpen,
+    //   };
+    // });
+    setSortStatus((sortStatus) => {
       return {
         ...sortStatus,
         isOpen: !sortStatus.isOpen,
@@ -41,8 +44,7 @@ const Sort = (props) => {
   const sortListItems = sortOptions.map((el) => {
     //If the list item was selected, provide dynamic className for dynamic styling
     //Will let user know which sort option is currently active
-    let activeClass =
-      activeSortOpt === el ? 'active sort-list-item' : 'sort-list-item';
+    let activeClass = activeSortOpt === el ? 'active sort-list-item' : 'sort-list-item';
 
     return (
       <li

@@ -34,7 +34,11 @@ const initialState = {
   alert: { type: '', message: '' },
   user: null,
   showSidebar: true,
-  subscriptions: {},
+  subscriptions: {
+    active:[],
+    trial:[],
+    past:[]
+  },
   /* Create Subscription */
   isEditing: false,
   editSubscriptionId: '',
@@ -263,9 +267,7 @@ const AppProvider = ({ children }) => {
       if (!subscriptions) {
         throw new Error('Could not get subscriptions');
       }
-
-      console.log({ subscriptions });
-
+      
       dispatch({
         type: GET_SUBSCRIPTIONS_SUCCESS,
         payload: { subscriptions, type },
@@ -282,21 +284,6 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
-  };
-
-  const getSubscriptions2 = async (type, params) => {
-    dispatch({ type: GET_ALL_SUBSCRIPTIONS_BEGIN });
-    try {
-      const { data } = await authFetch.get('/subscriptions');
-      const { subscriptions } = data;
-      dispatch({
-        type: GET_ALL_SUBSCRIPTIONS_SUCCESS,
-        payload: { subscriptions },
-      });
-    } catch (error) {
-      if (error.response?.status === 401) return;
-      console.log(error.response?.data?.message || error.message);
-    }
   };
 
   useEffect(() => {

@@ -1,10 +1,21 @@
+import { useEffect } from 'react';
 import { useAppContext } from '../context/appContext';
+import Card from './Card';
 
-const CardsContainer = () => {
-  const { subscriptions } = useAppContext();
+const CardsContainer = (props) => {
+  const { type } = props;
+  const { getSubscriptions, subscriptions } = useAppContext();
+  const filteredSubs = subscriptions[type]??[];
+
+  useEffect(() => {
+    getSubscriptions({type});
+  }, []);
+
   return (
-    <div>
-        Subscriptions
+    <div className='subscriptions'>
+      {filteredSubs.map((subscription) => {
+        return <Card key={subscription._id} {...subscription} />;
+      })}
     </div>
   );
 };

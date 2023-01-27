@@ -1,15 +1,13 @@
 import { useAppContext } from '../context/appContext';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Loading from './Loading';
-import Card from './Card';
 import SearchSortContainer from './SearchSortContainer';
+import CardsContainer from './CardsContainer';
 
-const SubscriptionsContainer = () => {
+const SubscriptionsContainer = (props) => {
+  const { type } = props;
   const { getSubscriptions, subscriptions, isLoading } = useAppContext();
-
-  useEffect(() => {
-    getSubscriptions({});
-  }, []);
+  const [ queryOptions, setQueryOptions ] = useState({type:type});
 
   if (isLoading) {
     return <Loading />;
@@ -22,12 +20,7 @@ const SubscriptionsContainer = () => {
         queryOptions={queryOptions}
         setQueryOptions={setQueryOptions}
       />
-      <CardsContainer />
-      <div className='subscriptions'>
-        {subscriptions.map((subscription) => {
-          return <Card key={subscription._id} {...subscription} />;
-        })}
-      </div>
+      <CardsContainer type={type}/>
     </section>
   );
 };
