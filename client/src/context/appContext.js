@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useReducer, useContext, createContext, useEffect } from 'react';
 import axios from 'axios';
 import reducer from './reducer';
@@ -25,7 +26,14 @@ import {
   CREATE_SUBSCRIPTION_BEGIN,
   CREATE_SUBSCRIPTION_SUCCESS,
   CREATE_SUBSCRIPTION_ERROR,
+  SET_EDIT_SUBSCRIPTION,
+  EDIT_SUBSCRIPTION_BEGIN,
+  EDIT_SUBSCRIPTION_SUCCESS,
+  EDIT_SUBSCRIPTION_ERROR,
+  DELETE_SUBSCRIPTION_BEGIN,
 } from './actions';
+
+// const date = moment(new Date()).format('DD/MM/YYYY');
 
 const initialState = {
   isLoading: false,
@@ -35,9 +43,9 @@ const initialState = {
   user: null,
   showSidebar: true,
   subscriptions: {
-    active:[],
-    trial:[],
-    past:[]
+    active: [],
+    trial: [],
+    cancelled: [],
   },
   /* Create Subscription */
   isEditing: false,
@@ -47,9 +55,24 @@ const initialState = {
   // TODO setup constants file
   subscriptionTypeOptions: ['weekly', 'monthly', 'quarterly', 'yearly'],
   subscriptionType: 'monthly',
-  subscriptionStartDate: new Date(),
-  subscriptionStatusOptions: ['active', 'inactive', 'cancelled', 'trial'],
+  subscriptionStartDate: '',
+  subscriptionStatusOptions: ['active', 'cancelled', 'trial'],
   subscriptionStatus: 'active',
+
+  /* Search */
+  search: {
+    active: { searchTerm: '', searchType: 'monthly', sort: 'latest' },
+    trial: { searchTerm: '', searchType: 'monthly', sort: 'latest' },
+    cancelled: { searchTerm: '', searchType: 'monthly', sort: 'latest' },
+  },
+  sortOptions: [
+    'latest',
+    'oldest',
+    'Highest Price',
+    'Lowest Price',
+    'A-Z',
+    'Z-A',
+  ],
 };
 
 const AppContext = createContext();
@@ -174,16 +197,15 @@ const AppProvider = ({ children }) => {
       dispatch({ type: UPDATE_USER_SUCCESS, payload: { user } });
     } catch (error) {
       if (error.response?.status === 401) return;
-      
-        dispatch({
-          type: UPDATE_USER_ERROR,
-          payload: {
-            message:
-              error.response?.data?.message || 'Updating user data failed',
-          },
-        });
-      }
-    
+
+      dispatch({
+        type: UPDATE_USER_ERROR,
+        payload: {
+          message: error.response?.data?.message || 'Updating user data failed',
+        },
+      });
+    }
+
     clearAlert();
   };
 
@@ -254,8 +276,9 @@ const AppProvider = ({ children }) => {
   };
 
   //do we want to consider optional parameters at all?
-  const getSubscriptions = async ({ type = '', sort = '', search = ''}) => {
-    const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
+  const getSubscriptions = async ({ type = '', sort = '', search = '' }) => {
+    const searchTerm = state.search[type].searchTerm;
+    const url = `/subscriptions?status=${type}&sort=${sort}&search=${searchTerm}`;
 
     try {
       dispatch({ type: GET_SUBSCRIPTIONS_BEGIN });
@@ -268,7 +291,7 @@ const AppProvider = ({ children }) => {
       if (!subscriptions) {
         throw new Error('Could not get subscriptions');
       }
-      
+
       dispatch({
         type: GET_SUBSCRIPTIONS_SUCCESS,
         payload: { subscriptions, type },
@@ -285,6 +308,61 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
+  };
+
+  const setEditSubscription = (id, type) => {
+    dispatch({ type: SET_EDIT_SUBSCRIPTION, payload: { id, type } });
+  };
+
+  const editSubscription = async () => {
+    dispatch({ type: EDIT_SUBSCRIPTION_BEGIN });
+    try {
+      const newSubscription = {
+        name: state.subscriptionName,
+        price: state.subscriptionPrice,
+        frequency: state.subscriptionType,
+        status: state.subscriptionStatus,
+        startDate: state.subscriptionStartDate,
+      };
+      await authFetch.patch(
+        `/subscriptions/${state.editSubscriptionId}`,
+        newSubscription
+      );
+
+      dispatch({ type: EDIT_SUBSCRIPTION_SUCCESS });
+
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response?.status === 401) return;
+      dispatch({
+        type: EDIT_SUBSCRIPTION_ERROR,
+        payload: {
+          message:
+            error.response?.data?.message ||
+            error.message ||
+            'Editing subscription failed',
+        },
+      });
+      clearValues();
+    }
+    clearAlert();
+  };
+
+  const deleteSubscription = async (id, type) => {
+    dispatch({ type: DELETE_SUBSCRIPTION_BEGIN });
+    try {
+      await authFetch.delete(`/subscriptions/${id}`);
+      getSubscriptions({ type });
+    } catch (error) {
+      if (error.response?.status === 401) return;
+      console.log(
+        error.response?.data?.message || 'Deleting subscription failed'
+      );
+    }
+  };
+
+  const clearFilters = (type) => {
+    console.log('filters cleared');
   };
 
   useEffect(() => {
@@ -306,6 +384,10 @@ const AppProvider = ({ children }) => {
         clearValues,
         handleChange,
         createSubscription,
+        setEditSubscription,
+        deleteSubscription,
+        editSubscription,
+        clearFilters,
       }}
     >
       {children}

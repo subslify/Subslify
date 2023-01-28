@@ -1,13 +1,11 @@
-import SubscriptionsContainer from '../../components/SubscriptionsContainer';
-import { useAppContext } from '../../context/appContext';
-import '../../assets/styles/search.scss';
+import { SubscriptionsContainer, SearchContainer } from '../../components';
 
 const Trial = () => {
   return (
-    <div>
-      <div>Trial Subscriptions</div>
-      <SubscriptionsContainer type='trial'/>
-    </div>
+    <>
+      <SearchContainer type='trial' />
+      <SubscriptionsContainer type='trial' />
+    </>
   );
 };
 

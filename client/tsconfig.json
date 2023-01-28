@@ -10,7 +10,8 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     /* Build */
     "noEmit": true,
-    "sourceMap": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "declaration": true,
     "declarationMap": false,
     "preserveSymlinks": true,

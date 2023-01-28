@@ -1,13 +1,11 @@
-import { useAppContext } from '../../context/appContext';
-import SubscriptionsContainer from '../../components/SubscriptionsContainer';
-import '../../assets/styles/search.scss';
+import { SubscriptionsContainer, SearchContainer } from '../../components';
 
-const Active = () => { 
+const Active = () => {
   return (
-    <div>
-      <div>Active Subscriptions</div>
-      <SubscriptionsContainer type='active'/>
-    </div>
+    <>
+      <SearchContainer type='active' />
+      <SubscriptionsContainer type='active' />
+    </>
   );
 };
 

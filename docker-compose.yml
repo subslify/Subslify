@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:latest # use the latest image
-    container_name: mongodb # container's name
+    container_name: mongodb # set container name
     restart: unless-stopped
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME} # set container root username
@@ -11,7 +11,7 @@ services:
       - ./db-data:/data/db
     ports:
       - '27017-27019:27017-27019'
-    command: ['mongod']
+    command: ['mongod'] # run mongod command
 
   # Mongo Express Service
   mongo-express:

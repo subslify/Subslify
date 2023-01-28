@@ -1,13 +1,11 @@
-import SubscriptionsContainer from '../../components/SubscriptionsContainer';
-import { useAppContext } from '../../context/appContext';
-import '../../assets/styles/search.scss';
+import { SubscriptionsContainer, SearchContainer } from '../../components';
 
 const Past = () => {
   return (
-    <div>
-      <div>Past Subscriptions</div>
-      <SubscriptionsContainer type='cancelled'/>
-    </div>
+    <>
+      <SearchContainer type='cancelled' />
+      <SubscriptionsContainer type='cancelled' />
+    </>
   );
 };
 

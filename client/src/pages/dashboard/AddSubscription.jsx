@@ -12,16 +12,12 @@ const AddSubscription = () => {
     subscriptionTypeOptions,
     subscriptionStatus,
     subscriptionStatusOptions,
-    name,
-    price,
-    frequency,
-    startDate,
-    user,
-    status,
-    endDate,
+    subscriptionStartDate,
+
     handleChange,
     clearValues,
     createSubscription,
+    editSubscription,
   } = useAppContext();
 
   const handleSubscriptionInput = (event) => {
@@ -36,13 +32,14 @@ const AddSubscription = () => {
     // console.log('submit');
     if (isEditing) {
       // TODO - Update subscription
-      return;
+      editSubscription();
+    } else {
+      createSubscription();
     }
-    createSubscription();
   };
 
   return (
-    <section className='subscription'>
+    <section className=''>
       <form className='form'>
         <h3>{isEditing ? 'Edit Subscription' : 'Add Subscription'}</h3>
         {displayAlert && <Alert />}
@@ -64,6 +61,15 @@ const AddSubscription = () => {
             value={subscriptionPrice}
             onChange={handleSubscriptionInput}
             labelText='Subscription Price'
+          />
+
+          <FormRow
+            type='text'
+            name='subscriptionStartDate'
+            placeholder='Enter Subscription Start Date'
+            value={subscriptionStartDate}
+            onChange={handleSubscriptionInput}
+            labelText='Subscription Start Date'
           />
 
           {/*  Subscription Type */}

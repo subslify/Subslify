@@ -9,7 +9,6 @@ interface IsEmailOptions {
   require_tld?: boolean;
 }
 
-
 interface UserSchemaType extends Document {
   name: {
     type: string;
@@ -38,18 +37,9 @@ interface OauthSchemaType {
 }
 
 const OauthSchema: Schema<OauthSchemaType> = new Schema({
-  provider: {
-    type: String,
-    required: true,
-  },
-  userId: {
-    type: String,
-    required: true,
-  },
-  userEmail: {
-    type: String,
-    required: true,
-  },
+  provider: String,
+  userId: String,
+  userEmail: String,
 });
 
 const UserSchema: Schema<UserSchemaType> = new Schema({

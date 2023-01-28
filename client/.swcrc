@@ -1,12 +1,15 @@
 {
   "minify": false,
+  "sourceMaps": true,
+  "inlineSourcesContent": true,
   "jsc": {
     "parser": {
+      "parseMap": true,
       "syntax": "ecmascript",
       "jsx": true,
       "dynamicImport": true,
-      "decorators": true,
-      "typescript": true
+      "typescript": true,
+      "decorators": true
     },
     "transform": {
       "react": {
@@ -23,7 +26,7 @@
         }
       }
     },
-    "externalHelpers": true,
-    "loose": true
+    "loose": true,
+    "externalHelpers": true
   }
 }

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import 'express-async-errors';
 import session from 'express-session';
 import passport from 'passport';
-import  passportConfig from './config/google.js';
+import passportConfig from './config/google.js';
 import morgan from 'morgan';
 import authenticateUser from './middleware/auth.js';
 
@@ -59,11 +59,8 @@ app.get('/', (_req: Request, res: Response, _next: NextFunction) => {
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/subscriptions', authenticateUser, subscriptionsRouter);
 
-
-
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
-
 
 const start = async (): Promise<void> => {
   try {

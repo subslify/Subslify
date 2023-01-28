@@ -8,6 +8,7 @@ import Search from './Search';
 import Sort from './Sort';
 import FormRowSelect from './FormRowSelect';
 import SubscriptionsContainer from './SubscriptionsContainer';
+import SearchContainer from './SearchContainer';
 
 export {
   Logo,
@@ -20,4 +21,5 @@ export {
   Sort,
   FormRowSelect,
   SubscriptionsContainer,
+  SearchContainer,
 };

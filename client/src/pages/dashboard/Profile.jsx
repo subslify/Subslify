@@ -34,7 +34,7 @@ const Profile = () => {
             name='name'
             value={name}
             placeholder='Enter your name'
-            handleChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             labelText='Name'
             autocomplete='name'
           />
@@ -43,7 +43,7 @@ const Profile = () => {
             name='email'
             value={newEmail}
             placeholder='Enter your email'
-            handleChange={(e) => setNewEmail(e.target.value)}
+            onChange={(e) => setNewEmail(e.target.value)}
             labelText='Email'
             autocomplete='email'
           />

@@ -15,14 +15,7 @@ const dev = {
       {
         test: /\.(ts|js)x?$/i,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'swc-loader',
-            options: {
-              parseMap: true,
-            },
-          },
-        ],
+        use: ['swc-loader'],
       },
     ],
   },

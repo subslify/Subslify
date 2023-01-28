@@ -22,6 +22,11 @@ import {
   CREATE_SUBSCRIPTION_BEGIN,
   CREATE_SUBSCRIPTION_SUCCESS,
   CREATE_SUBSCRIPTION_ERROR,
+  SET_EDIT_SUBSCRIPTION,
+  DELETE_SUBSCRIPTION_BEGIN,
+  EDIT_SUBSCRIPTION_SUCCESS,
+  EDIT_SUBSCRIPTION_ERROR,
+  EDIT_SUBSCRIPTION_BEGIN,
 } from './actions';
 
 import { initialState } from './appContext';
@@ -164,14 +169,10 @@ const reducer = (state, action) => {
   }
 
   if (action.type === GET_SUBSCRIPTIONS_SUCCESS) {
-    
-    const type = action.payload.type;
-    const key = `subscriptions.${type}`;
-
     return {
       ...state,
       isLoading: false,
-      subscriptions: {[type]: action.payload.subscriptions},
+      subscriptions: { [action.payload.type]: action.payload.subscriptions },
     };
   }
 
@@ -234,6 +235,64 @@ const reducer = (state, action) => {
         message:
           action.payload.message ||
           'Unexpected Error. Subscription could not be created.',
+      },
+    };
+  }
+
+  if (action.type === SET_EDIT_SUBSCRIPTION) {
+    const subscription = state.subscriptions[action.payload.type].find(
+      (subscription) => subscription._id === action.payload.id
+    );
+    if (!subscription) {
+      throw new Error('Could not find subscription to edit.');
+    }
+
+    const { name, price, _id, status, startDate, frequency } = subscription;
+    return {
+      ...state,
+      isEditing: true,
+      editSubscriptionId: _id,
+      subscriptionName: name,
+      subscriptionPrice: price,
+      subscriptionType: frequency,
+      subscriptionStatus: status,
+      subscriptionStartDate: startDate,
+    };
+  }
+
+  if (action.type === DELETE_SUBSCRIPTION_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: false,
+    };
+  }
+
+  if (action.type === EDIT_SUBSCRIPTION_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+
+  if (action.type === EDIT_SUBSCRIPTION_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alert: { type: 'success', message: 'Subscription updated successfully!' },
+    };
+  }
+  if (action.type === EDIT_SUBSCRIPTION_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alert: {
+        type: 'danger',
+        message:
+          action.payload.message ||
+          'Unexpected Error. Subscription could not be updated.',
       },
     };
   }

@@ -4,12 +4,12 @@ const links = [
   {
     id: 1,
     text: 'Summary',
-    path: '/',
+    path: '/summary',
   },
   {
     id: 2,
     text: 'Active Subscriptions',
-    path: '/active',
+    path: '/',
   },
   {
     id: 3,
