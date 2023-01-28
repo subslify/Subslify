@@ -27,12 +27,43 @@ const createSubscription: RequestHandler = async (req: IControllerRequest, res: 
 
 const getSubscriptions: RequestHandler = async (req: IControllerRequest, res: Response) => {
   const user = req.user.id;
-  const filter = {
-    user,
-    ...req.query, // TODO: sanitize query
-  };
-  const subscriptions = await Subscription.find(filter).exec();
-  res.status(StatusCodes.OK).json(subscriptions);
+
+  
+  if (!user) {
+    throw new UnAuthenticatedError('User not found');
+  }
+
+  
+  const { status, frequency, sort, search } = req.query;
+  
+  const filter = { user };
+  
+  
+  filter.status = status ? status : 'active';
+  filter.frequency = frequency ? frequency : 'monthly';
+  
+  if (search) {
+    filter.name = { $regex: search, $options: 'i' };
+  }
+  
+  //sort 
+  const result = Subscription.find(filter);
+
+  // if user sort by 'cost', or 'alpha', using mongoSort method
+  if (sort === "cost") {
+    result.sort('price');
+  } else if (sort === "alphabetical") {
+    result.sort('name');
+  } else if(sort === 'payment due'){
+    result.sort('startDate')
+  }
+
+  const subscriptions = await result;
+  console.log(subscriptions);
+
+
+  // add Subscription.find().sort({obj})?
+  res.status(StatusCodes.OK).json({ subscriptions });
 };
 
 const getOneSubscription: RequestHandler = async (req: Request, res: Response) => {

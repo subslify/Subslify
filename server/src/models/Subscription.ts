@@ -3,19 +3,19 @@ import { Schema, model, ObjectId, Types } from 'mongoose';
 enum Frequency {
   Monthly,
   Quarterly,
-  Yearly
+  Yearly,
 }
 
 enum Status {
-  Active, 
+  Active,
   Cancelled,
   Paused,
-  Trial
+  Trial,
 }
 
 interface Note {
-  body: String,
-  createdAt: Date
+  body: String;
+  createdAt: Date;
 }
 
 interface SubscriptionSchemaType extends Document {
@@ -28,7 +28,7 @@ interface SubscriptionSchemaType extends Document {
   frequency: {
     type: string;
     enum: Frequency;
-  }; 
+  };
   status?: {
     type: string;
     enum: Status;
@@ -47,7 +47,7 @@ interface SubscriptionSchemaType extends Document {
   user: {
     type: ObjectId; // Schema.Types.ObjectId?
     ref: string;
-  }
+  };
 }
 
 const SubscriptionSchema: Schema<SubscriptionSchemaType> = new Schema({
@@ -66,7 +66,7 @@ const SubscriptionSchema: Schema<SubscriptionSchemaType> = new Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'cancelled', 'paused', 'trial'],
+    enum: ['active', 'cancelled', 'trial'], //removed 'paused'
     default: 'active',
   },
   startDate: {

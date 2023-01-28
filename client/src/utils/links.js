@@ -21,9 +21,13 @@ const links = [
     text: 'Past Subscriptions',
     path: '/past',
   },
-
   {
     id: 5,
+    text: 'Add Subscription',
+    path: '/add-subscription',
+  },
+  {
+    id: 6,
     text: 'Profile',
     path: '/profile',
     icon: <ImProfile />,

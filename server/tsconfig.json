@@ -13,7 +13,7 @@
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "dist",
