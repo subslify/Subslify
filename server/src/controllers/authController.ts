@@ -6,8 +6,10 @@ import {
   UnAuthenticatedError,
 } from '../errors/index.js';
 import attachCookies from '../utils/attachCookies.js';
+import { RequestHandler, Request, Response } from 'express';
+import { IUser } from './definitions.js';
 
-const register = async (req, res) => {
+const register: RequestHandler = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   if (!name) {
     throw new BadRequestError('Please provide a name');
@@ -29,7 +31,7 @@ const register = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ user });
 };
 
-const login = async (req, res) => {
+const login: RequestHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (!email || !password) {
     throw new BadRequestError('Email and password are required');
@@ -51,7 +53,7 @@ const login = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: userData });
 };
 
-const updateUser = async (req, res) => {
+const updateUser: RequestHandler = async (req: Request, res: Response) => {
   const { name, email, newEmail } = req.body;
 
   if (!name) {
@@ -82,24 +84,25 @@ const updateUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: userData });
 };
 
-const getCurrentUser = async (req, res) => {
-  const { id } = req.user;
+const getCurrentUser: RequestHandler = async (req: Request, res: Response) => {
+  const user: IUser = req.user;
+  const userId = user.id;
 
-  if (!id) {
+  if (!userId) {
     throw new UnAuthenticatedError('User id not found');
   }
 
-  const user = await User.findById(id);
+  const result = await User.findById(userId);
 
-  if (!user) {
+  if (!result) {
     throw new UnAuthenticatedError('User not found');
   }
 
-  const userData = { name: user.name, email: user.email };
+  const userData = { name: result.name, email: result.email };
   res.status(StatusCodes.OK).json({ user: userData });
 };
 
-const logout = async (_req, res) => {
+const logout: RequestHandler = async (_req, res: Response) => {
   res.clearCookie('token', { httpOnly: true });
   res.status(StatusCodes.OK).json({ message: 'Logged out' });
 };
