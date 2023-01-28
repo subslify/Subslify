@@ -173,7 +173,8 @@ const AppProvider = ({ children }) => {
 
       dispatch({ type: UPDATE_USER_SUCCESS, payload: { user } });
     } catch (error) {
-      if (error.response?.status !== 401) {
+      if (error.response?.status === 401) return;
+      
         dispatch({
           type: UPDATE_USER_ERROR,
           payload: {
@@ -182,7 +183,7 @@ const AppProvider = ({ children }) => {
           },
         });
       }
-    }
+    
     clearAlert();
   };
 
@@ -253,7 +254,7 @@ const AppProvider = ({ children }) => {
   };
 
   //do we want to consider optional parameters at all?
-  const getSubscriptions = async ({ type, sort, search}) => {
+  const getSubscriptions = async ({ type = '', sort = '', search = ''}) => {
     const url = `/subscriptions?status=${type}&sort=${sort}&search=${search}`;
 
     try {
