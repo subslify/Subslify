@@ -1,8 +1,10 @@
-import Subscription from '../models/Subscription.ts';
+import Subscription from '../models/Subscription.js';
 import { StatusCodes } from 'http-status-codes';
 import { UnAuthenticatedError } from '../errors/index.js';
+import { RequestHandler, Request, Response } from 'express';
+import { IControllerRequest } from './definitions.js';
 
-const createSubscription = async (req, res) => {
+const createSubscription: RequestHandler = async (req: IControllerRequest, res: Response) => {
   const { name, price, frequency, startDate, status, endDate, logoUrl, notes } =
     req.body;
   const user = req.user.id;
@@ -23,7 +25,7 @@ const createSubscription = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ message: 'Subscription created' });
 };
 
-const getSubscriptions = async (req, res) => {
+const getSubscriptions: RequestHandler = async (req: IControllerRequest, res: Response) => {
   const user = req.user.id;
   const filter = {
     user,
@@ -33,24 +35,24 @@ const getSubscriptions = async (req, res) => {
   res.status(StatusCodes.OK).json(subscriptions);
 };
 
-const getOneSubscription = async (req, res) => {
+const getOneSubscription: RequestHandler = async (req: Request, res: Response) => {
   Subscription.findById(req.params.id)
     .then((subscription) => res.status(StatusCodes.OK).json(subscription))
-    .catch((err) => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(StatusCodes.BAD_REQUEST).json('Error: ' + err));
 };
 
-const updateSubscription = async (req, res) => {
+const updateSubscription: RequestHandler = async (req: Request, res: Response) => {
   Subscription.findByIdAndUpdate(req.params.id, req.body)
     .then((subscription) =>
       res.status(StatusCodes.OK).json('Subscription updated.')
     )
-    .catch((err) => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(StatusCodes.BAD_REQUEST).json('Error: ' + err));
 };
 
-const deleteSubscription = async (req, res) => {
+const deleteSubscription: RequestHandler = async (req: Request, res: Response) => {
   Subscription.findByIdAndDelete(req.params.id)
     .then(() => res.status(StatusCodes.OK).json('Subscription deleted.'))
-    .catch((err) => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(StatusCodes.BAD_REQUEST).json('Error: ' + err));
 };
 
 export {

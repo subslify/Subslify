@@ -53,16 +53,16 @@ interface SubscriptionSchemaType extends Document {
 const SubscriptionSchema: Schema<SubscriptionSchemaType> = new Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name is required'],
   },
   price: {
     type: Number,
-    required: true,
+    required: [true, 'Price is required'],
   },
   frequency: {
     type: String,
     enum: ['monthly', 'quarterly', 'yearly'],
-    required: true,
+    required: [true, 'Frequency is required'],
   },
   status: {
     type: String,
@@ -71,7 +71,7 @@ const SubscriptionSchema: Schema<SubscriptionSchemaType> = new Schema({
   },
   startDate: {
     type: Date,
-    required: true,
+    required: [true, 'Start date is required'],
   },
   endDate: {
     type: Date,
@@ -88,7 +88,7 @@ const SubscriptionSchema: Schema<SubscriptionSchemaType> = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: [true, 'User is required'],
   },
 });
 
