@@ -1,4 +1,3 @@
-import { Request } from "express";
-export interface IControllerRequest extends Request {
-  user: { id: string }
-};
+export interface IUser {
+  id?: string;  
+}

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import 'express-async-errors';
 import session from 'express-session';
 import passport from 'passport';
-import  passportConfig from './config/google.js';
+import passportConfig from './config/google.js';
 import morgan from 'morgan';
 import authenticateUser from './middleware/auth.js';
 

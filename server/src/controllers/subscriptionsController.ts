@@ -2,13 +2,18 @@ import Subscription from '../models/Subscription.js';
 import { StatusCodes } from 'http-status-codes';
 import { UnAuthenticatedError } from '../errors/index.js';
 import { RequestHandler, Request, Response } from 'express';
-import { IControllerRequest } from './definitions.js';
+import { IUser } from './definitions.js';
 
-const createSubscription: RequestHandler = async (req: IControllerRequest, res: Response) => {
+interface IRequestQuery {status? : string, frequency?: string, sort?: string; search?: string};
+
+interface IFilter {userId: string, status? : string, frequency?: string, sort?: string; search?: string, name?: {}};
+
+const createSubscription: RequestHandler = async (req: Request, res: Response) => {
   const { name, price, frequency, startDate, status, endDate, logoUrl, notes } =
     req.body;
-  const user = req.user.id;
-  if (!user) {
+  const user: IUser = req.user;
+  const userId = user.id;
+  if (!userId) {
     throw new UnAuthenticatedError('User not found');
   }
   await Subscription.create({
@@ -25,31 +30,24 @@ const createSubscription: RequestHandler = async (req: IControllerRequest, res: 
   res.status(StatusCodes.CREATED).json({ message: 'Subscription created' });
 };
 
-const getSubscriptions: RequestHandler = async (req: IControllerRequest, res: Response) => {
-  const user = req.user.id;
-
+const getSubscriptions: RequestHandler = async (req: Request<{}, {}, {}, IRequestQuery>, res: Response) => {
+  const user: IUser = req.user; 
+  const userId = user.id;
   
-  if (!user) {
+  if (!userId) {
     throw new UnAuthenticatedError('User not found');
   }
-
-  
   const { status, frequency, sort, search } = req.query;
   
-  const filter = { user };
-  
-  
+  const filter: IFilter = { userId };
   filter.status = status ? status : 'active';
   filter.frequency = frequency ? frequency : 'monthly';
-  
   if (search) {
     filter.name = { $regex: search, $options: 'i' };
   }
   
-  //sort 
+    // mongoSort method
   const result = Subscription.find(filter);
-
-  // if user sort by 'cost', or 'alpha', using mongoSort method
   if (sort === "cost") {
     result.sort('price');
   } else if (sort === "alphabetical") {
@@ -59,10 +57,7 @@ const getSubscriptions: RequestHandler = async (req: IControllerRequest, res: Re
   }
 
   const subscriptions = await result;
-  console.log(subscriptions);
 
-
-  // add Subscription.find().sort({obj})?
   res.status(StatusCodes.OK).json({ subscriptions });
 };
 

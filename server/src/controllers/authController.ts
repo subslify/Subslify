@@ -7,7 +7,7 @@ import {
 } from '../errors/index.js';
 import attachCookies from '../utils/attachCookies.js';
 import { RequestHandler, Request, Response } from 'express';
-import { IControllerRequest } from './definitions.js';
+import { IUser } from './definitions.js';
 
 const register: RequestHandler = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -84,20 +84,21 @@ const updateUser: RequestHandler = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ user: userData });
 };
 
-const getCurrentUser: RequestHandler = async (req: IControllerRequest, res: Response) => {
-  const { id } = req.user;
+const getCurrentUser: RequestHandler = async (req: Request, res: Response) => {
+  const user: IUser = req.user;
+  const userId = user.id;
 
-  if (!id) {
+  if (!userId) {
     throw new UnAuthenticatedError('User id not found');
   }
 
-  const user = await User.findById(id);
+  const result = await User.findById(userId);
 
-  if (!user) {
+  if (!result) {
     throw new UnAuthenticatedError('User not found');
   }
 
-  const userData = { name: user.name, email: user.email };
+  const userData = { name: result.name, email: result.email };
   res.status(StatusCodes.OK).json({ user: userData });
 };
 

@@ -1,14 +1,8 @@
-import mongoose, { Schema, model, Document, Model } from 'mongoose';
+import { Schema, model, Document, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-const { isEmail } : any = validator;
-
-interface IsEmailOptions {
-  allow_display_name?: boolean;
-  allow_utf8_local_part?: boolean;
-  require_tld?: boolean;
-}
+import { IsEmailOptions } from 'validator/lib/isEmail';
 
 interface UserSchemaType extends Document {
   name: {
@@ -66,7 +60,7 @@ const UserSchema: Schema<UserSchemaType> = new Schema({
     type: String,
     required: [true, 'Email is required'],
     validate: {
-      validator: isEmail,
+      validator: validator.isEmail,
       message: 'Email is not valid',
     },
     unique: true,
