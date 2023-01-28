@@ -1,12 +1,19 @@
-import Subscription from '../models/Subscription.ts';
+import Subscription from '../models/Subscription.js';
 import { StatusCodes } from 'http-status-codes';
 import { UnAuthenticatedError } from '../errors/index.js';
+import { RequestHandler, Request, Response } from 'express';
+import { IUser } from './definitions.js';
 
-const createSubscription = async (req, res) => {
+interface IRequestQuery {status? : string, frequency?: string, sort?: string; search?: string};
+
+interface IFilter {userId: string, status? : string, frequency?: string, sort?: string; search?: string, name?: {}};
+
+const createSubscription: RequestHandler = async (req: Request, res: Response) => {
   const { name, price, frequency, startDate, status, endDate, logoUrl, notes } =
     req.body;
-  const user = req.user.id;
-  if (!user) {
+  const user: IUser = req.user;
+  const userId = user.id;
+  if (!userId) {
     throw new UnAuthenticatedError('User not found');
   }
   await Subscription.create({
@@ -23,31 +30,24 @@ const createSubscription = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ message: 'Subscription created' });
 };
 
-const getSubscriptions = async (req, res) => {
-  const user = req.user.id;
-
+const getSubscriptions: RequestHandler = async (req: Request<{}, {}, {}, IRequestQuery>, res: Response) => {
+  const user: IUser = req.user; 
+  const userId = user.id;
   
-  if (!user) {
+  if (!userId) {
     throw new UnAuthenticatedError('User not found');
   }
-
-  
   const { status, frequency, sort, search } = req.query;
   
-  const filter = { user };
-  
-  
+  const filter: IFilter = { userId };
   filter.status = status ? status : 'active';
   filter.frequency = frequency ? frequency : 'monthly';
-  
   if (search) {
     filter.name = { $regex: search, $options: 'i' };
   }
   
-  //sort 
+    // mongoSort method
   const result = Subscription.find(filter);
-
-  // if user sort by 'cost', or 'alpha', using mongoSort method
   if (sort === "cost") {
     result.sort('price');
   } else if (sort === "alphabetical") {
@@ -57,31 +57,28 @@ const getSubscriptions = async (req, res) => {
   }
 
   const subscriptions = await result;
-  console.log(subscriptions);
 
-
-  // add Subscription.find().sort({obj})?
   res.status(StatusCodes.OK).json({ subscriptions });
 };
 
-const getOneSubscription = async (req, res) => {
+const getOneSubscription: RequestHandler = async (req: Request, res: Response) => {
   Subscription.findById(req.params.id)
     .then((subscription) => res.status(StatusCodes.OK).json(subscription))
-    .catch((err) => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(StatusCodes.BAD_REQUEST).json('Error: ' + err));
 };
 
-const updateSubscription = async (req, res) => {
+const updateSubscription: RequestHandler = async (req: Request, res: Response) => {
   Subscription.findByIdAndUpdate(req.params.id, req.body)
     .then((subscription) =>
       res.status(StatusCodes.OK).json('Subscription updated.')
     )
-    .catch((err) => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(StatusCodes.BAD_REQUEST).json('Error: ' + err));
 };
 
-const deleteSubscription = async (req, res) => {
+const deleteSubscription: RequestHandler = async (req: Request, res: Response) => {
   Subscription.findByIdAndDelete(req.params.id)
     .then(() => res.status(StatusCodes.OK).json('Subscription deleted.'))
-    .catch((err) => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(StatusCodes.BAD_REQUEST).json('Error: ' + err));
 };
 
 export {

@@ -1,14 +1,8 @@
 import { Schema, model, Document, Model } from 'mongoose';
-import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
-interface IsEmailOptions {
-  allow_display_name?: boolean;
-  allow_utf8_local_part?: boolean;
-  require_tld?: boolean;
-}
-
+import validator from 'validator';
+import { IsEmailOptions } from 'validator/lib/isEmail';
 
 interface UserSchemaType extends Document {
   name: {
@@ -29,6 +23,8 @@ interface UserSchemaType extends Document {
   };
   password: string;
   oauth: OauthSchemaType | null;
+  createJWT(): string;
+  comparePasswords(password: string): Promise<boolean>;
 }
 
 interface OauthSchemaType {
@@ -63,7 +59,6 @@ const UserSchema: Schema<UserSchemaType> = new Schema({
   email: {
     type: String,
     required: [true, 'Email is required'],
-
     validate: {
       validator: validator.isEmail,
       message: 'Email is not valid',
