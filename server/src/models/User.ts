@@ -36,15 +36,12 @@ interface OauthSchemaType {
 const OauthSchema: Schema<OauthSchemaType> = new Schema({
   provider: {
     type: String,
-    required: true,
   },
   userId: {
     type: String,
-    required: true,
   },
   userEmail: {
     type: String,
-    required: true,
   },
 });
 
