@@ -11,6 +11,7 @@ services:
       - ./db-data:/data/db
     ports:
       - '27017-27019:27017-27019'
+    command: ['mongod']
 
   # Mongo Express Service
   mongo-express:
