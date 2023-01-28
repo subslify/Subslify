@@ -32,6 +32,8 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/validator": "^13.7.11",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "eslint": "^8.31.0",

@@ -1,5 +1,4 @@
 import User from '../models/User.js';
-import passport from 'passport';
 import {
   Profile,
   Strategy as GoogleStrategy,
@@ -7,21 +6,22 @@ import {
 } from 'passport-google-oauth20';
 import generator from 'generate-password';
 import { BadRequestError } from '../errors/index.js';
+import { PassportStatic } from 'passport';
 
 const randomPw: string = generator.generate({
   length: 10,
   numbers: true,
 });
 
-export default function (passport: any) {
-  passport.serializeUser((user: any, done: VerifyCallback) => {
-    // console.log('serialize user', user);
+export default function (passport: PassportStatic) {
+  // persist user data (after successful authentication) into session
+  passport.serializeUser((user: { id: string }, done: VerifyCallback) => {
     return done(null, user.id);
   });
 
+  // deserializeUser is used to retrieve user data from session
   passport.deserializeUser((id: string, done: VerifyCallback) => {
     User.findById(id, (err: string, user: Object) => {
-      // console.log('deserialize user', user);
       return done(err, user);
     });
   });
@@ -31,7 +31,7 @@ export default function (passport: any) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID!,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        callbackURL: process.env.GOOGLE_REDIRECT_URL, // api/v1/auth/google/redirect
+        callbackURL: process.env.GOOGLE_REDIRECT_URL,
         scope: ['email', 'profile'],
       },
       async (
@@ -40,7 +40,6 @@ export default function (passport: any) {
         profile: Profile,
         done: VerifyCallback
       ) => {
-        // console.log(profile);
 
         const newUser = {
           name: profile.displayName,
@@ -60,7 +59,6 @@ export default function (passport: any) {
           // if not, create user
           if (!user) {
             user = await User.create(newUser);
-            console.log('user1:', user);
             return done(null, user);
             // else if check wether user.oauth is falsy(empty) then add then profile info to user.oauth
           } else if (!user.oauth) {
